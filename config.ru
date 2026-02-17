@@ -3,7 +3,7 @@ require 'sass-embedded'
 require 'fileutils'
 
 # --- UPDATE THESE PATHS ---
-scss_file = File.expand_path('views/sass/app.scss', __dir__) # Changed 'scss' to 'sass'
+scss_file = File.expand_path('assets/sass/app.scss', __dir__)
 css_dir   = File.expand_path('public/css', __dir__)
 css_file  = File.join(css_dir, 'app.css')
 
