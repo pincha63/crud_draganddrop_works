@@ -1,6 +1,6 @@
 # Library Management System (Ruby, Roda, Sequel, SQLite)
 
-This is a full-featured web application designed to manage Authors, Publishers, and their complex many-to-many relationships. Built with a focus on efficiency, it features a modern drag-and-drop interface and strict single-screen layout.
+This is a full-featured Ruby 3.4 web application designed to manage Authors, Publishers, and their complex many-to-many relationships. Built with a focus on efficiency, it features a modern drag-and-drop interface and strict single-screen layout.
 
 ---
 
