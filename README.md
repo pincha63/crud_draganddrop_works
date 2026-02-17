@@ -50,8 +50,9 @@ Standard browsers only support `GET` and `POST`. This app achieves full RESTful 
 ## 5. Usage Instructions for New Users
 
 ### 5.1. Initial Setup
-1. **Install Ruby**: Ensure you have Ruby 3.0+ installed.
-2. **Install Gems**: Run `bundle install` or manually install: `roda`, `sequel`, `sqlite3`, `slim`, `sass-embedded`, `rackup`.
+1. **Install Ruby**: Ensure you have Ruby 3.4 installed.
+2. **Install Gems**: Run `bundle install` or manually install: roda, sequel, slim, sqlite3, json, rack, rack-session, rackup, base64, puma, sass, sass-embedded
+   Your mileage may vary esp. for base64 and sass
 3. **Initialize DB**: Run `ruby db/setup.rb` to create the database and seed initial data.
 
 ### 5.2. Managing Data
