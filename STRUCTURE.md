@@ -25,7 +25,7 @@ library_app/
 ├── public/
 │   └── css/
 │       └── app.css     # Compiled CSS
-└    ├── views/
+├── views/
     ├── layout.slim     # Main layout template
     ├── authors/        # Author-related views (index, edit)
     ├── publishers/     # Publisher-related views (index, edit)
