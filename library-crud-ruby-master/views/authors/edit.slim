@@ -1,0 +1,25 @@
+h2 = author ? "Edit Author" : "New Author"
+
+form action=(author ? "/authors/#{author[:id]}" : "/authors") method="POST"
+  / Full HTTP PUT coverage: Using a hidden _method field for updates
+  - if author
+    input type="hidden" name="_method" value="PUT"
+  
+  div
+    label Name
+    input type="text" name="author[name]" value=(author ? author[:name] : "") required=true
+    
+  div
+    label Bio
+    textarea name="author[bio]" = (author ? author[:bio] : "")
+    
+  div
+    label Publishers
+    select name="publisher_ids[]" multiple=true size=5
+      - all_publishers.each do |pub|
+        option value=pub[:id] selected=(author_publisher_ids.include?(pub[:id]))
+          = pub[:name]
+
+  div
+    button.btn.btn-success type="submit" = author ? "Update" : "Create"
+    a.btn href="/" Cancel

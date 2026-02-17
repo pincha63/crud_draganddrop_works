@@ -1,0 +1,19 @@
+h2 Publishers
+a.btn.btn-success href="/publishers/new" Add New Publisher
+
+table
+  thead
+    tr
+      th Name
+      th Address
+      th Actions
+  tbody
+    - publishers.each do |pub|
+      tr
+        td = pub[:name]
+        td = pub[:address]
+        td.actions
+          a.btn.btn-primary href="/publishers/#{pub[:id]}/edit" Edit
+          form action="/publishers/#{pub[:id]}" method="POST" style="display:inline"
+            input type="hidden" name="_method" value="DELETE"
+            button.btn.btn-danger type="submit" onclick="return confirm('Are you sure?')" Delete

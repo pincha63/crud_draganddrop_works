@@ -1,0 +1,145 @@
+h2 Advanced Relationship Manager
+
+.controls
+  div
+    label Select Author:
+    select#author-select name="author_id"
+      option value="" Select an author...
+      - all_authors.each do |author|
+        option value=author[:id] = author[:name]
+  
+  .buttons
+    button.btn.btn-success#save-btn disabled=true Save Changes
+    button.btn#undo-btn disabled=true Undo
+    a.btn href="/" Cancel
+
+.drag-container
+  .column
+    h3 Current Publishers
+    .drop-zone#current-publishers-zone
+  
+  .column
+    h3 Available Publishers
+    .drop-zone#available-publishers-zone
+
+/ Hidden form for submission
+form#rel-form action="/relationships/bulk" method="POST"
+  input type="hidden" name="_method" value="PUT"
+  input type="hidden" name="author_id" id="form-author-id"
+  #form-publisher-ids
+
+javascript:
+  const authorSelect = document.getElementById('author-select');
+  const currentZone = document.getElementById('current-publishers-zone');
+  const availableZone = document.getElementById('available-publishers-zone');
+  const saveBtn = document.getElementById('save-btn');
+  const undoBtn = document.getElementById('undo-btn');
+  const form = document.getElementById('rel-form');
+  
+  const allPublishers = #{{all_publishers.to_json}};
+  const relations = #{{author_publisher_ids.to_json}};
+  
+  let initialState = [];
+  let currentState = [];
+
+  authorSelect.addEventListener('change', (e) => {
+    const authorId = e.target.value;
+    if (!authorId) {
+      clearZones();
+      return;
+    }
+    
+    const currentIds = relations[authorId] || [];
+    initialState = [...currentIds];
+    currentState = [...currentIds];
+    
+    renderPublishers();
+    updateButtons();
+  });
+
+  function clearZones() {
+    currentZone.innerHTML = '';
+    availableZone.innerHTML = '';
+    saveBtn.disabled = true;
+    undoBtn.disabled = true;
+  }
+
+  function renderPublishers() {
+    currentZone.innerHTML = '';
+    availableZone.innerHTML = '';
+    
+    allPublishers.forEach(pub => {
+      const el = document.createElement('div');
+      el.className = 'draggable-item';
+      el.draggable = true;
+      el.textContent = pub.name;
+      el.dataset.id = pub.id;
+      
+      el.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', pub.id);
+        el.classList.add('dragging');
+      });
+      
+      el.addEventListener('dragend', () => {
+        el.classList.remove('dragging');
+      });
+
+      if (currentState.includes(pub.id)) {
+        currentZone.appendChild(el);
+      } else {
+        availableZone.appendChild(el);
+      }
+    });
+  }
+
+  [currentZone, availableZone].forEach(zone => {
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      zone.classList.add('drag-over');
+    });
+
+    zone.addEventListener('dragleave', () => {
+      zone.classList.remove('drag-over');
+    });
+
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const id = parseInt(e.dataTransfer.getData('text/plain'));
+      
+      if (zone.id === 'current-publishers-zone') {
+        if (!currentState.includes(id)) currentState.push(id);
+      } else {
+        currentState = currentState.filter(cid => cid !== id);
+      }
+      
+      renderPublishers();
+      updateButtons();
+    });
+  });
+
+  function updateButtons() {
+    const changed = JSON.stringify(initialState.sort()) !== JSON.stringify(currentState.sort());
+    saveBtn.disabled = !changed;
+    undoBtn.disabled = !changed;
+  }
+
+  undoBtn.addEventListener('click', () => {
+    currentState = [...initialState];
+    renderPublishers();
+    updateButtons();
+  });
+
+  saveBtn.addEventListener('click', () => {
+    document.getElementById('form-author-id').value = authorSelect.value;
+    const container = document.getElementById('form-publisher-ids');
+    container.innerHTML = '';
+    currentState.forEach(id => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'publisher_ids[]';
+      input.value = id;
+      container.appendChild(input);
+    });
+    form.submit();
+  });

@@ -1,0 +1,17 @@
+h2 = publisher ? "Edit Publisher" : "New Publisher"
+
+form action=(publisher ? "/publishers/#{publisher[:id]}" : "/publishers") method="POST"
+  - if publisher
+    input type="hidden" name="_method" value="PUT"
+  
+  div
+    label Name
+    input type="text" name="publisher[name]" value=(publisher ? publisher[:name] : "") required=true
+    
+  div
+    label Address
+    input type="text" name="publisher[address]" value=(publisher ? publisher[:address] : "")
+
+  div
+    button.btn.btn-success type="submit" = publisher ? "Update" : "Create"
+    a.btn href="/publishers" Cancel

@@ -1,0 +1,37 @@
+h2 Manage Relationships
+
+form action="/relationships" method="POST"
+  / Use PUT to indicate updating existing relationships
+  input type="hidden" name="_method" value="PUT"
+  
+  div
+    label Select Author
+    select name="author_id" required=true id="author-select"
+      option value="" Select an author...
+      - all_authors.each do |author|
+        option value=author[:id] = author[:name]
+        
+  div
+    label Select Publishers
+    select name="publisher_ids[]" multiple=true size=8 id="publisher-select"
+      - all_publishers.each do |pub|
+        option value=pub[:id] = pub[:name]
+
+  div
+    button.btn.btn-success type="submit" Update Relationships
+    a.btn href="/" Cancel
+
+/ Simple JS to update selected publishers when author changes
+javascript:
+  const authorSelect = document.getElementById('author-select');
+  const publisherSelect = document.getElementById('publisher-select');
+  const relations = #{{author_publisher_ids.to_json}};
+
+  authorSelect.addEventListener('change', (e) => {
+    const authorId = e.target.value;
+    const selectedPubs = relations[authorId] || [];
+    
+    Array.from(publisherSelect.options).forEach(option => {
+      option.selected = selectedPubs.includes(parseInt(option.value));
+    });
+  });

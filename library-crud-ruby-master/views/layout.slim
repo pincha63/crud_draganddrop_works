@@ -1,0 +1,20 @@
+doctype html
+html
+  head
+    title Library CRUD
+    link rel="stylesheet" href="/css/app.css"
+  body
+    nav
+      a href="/" Authors
+      a href="/publishers" Publishers
+      a href="/relationships" Relationships
+      a href="/relationships/drag_drop" Drag & Drop Manager
+    
+    .container
+      - if flash[:notice]
+        .flash.notice = flash[:notice]
+      - if flash[:error]
+        .flash.error = flash[:error]
+        
+      .content-area
+        == yield

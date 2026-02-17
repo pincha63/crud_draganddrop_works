@@ -1,0 +1,22 @@
+h2 Authors
+a.btn.btn-success href="/authors/new" Add New Author
+
+table
+  thead
+    tr
+      th Name
+      th Bio
+      th Publishers
+      th Actions
+  tbody
+    - authors.each do |author|
+      tr
+        td = author[:name]
+        td = author[:bio]
+        td = author_publishers[author[:id]]&.map{|p| p[:name]}&.join(', ')
+        td.actions
+          a.btn.btn-primary href="/authors/#{author[:id]}/edit" Edit
+          / Full HTTP DELETE coverage: Using a form with a hidden _method field
+          form action="/authors/#{author[:id]}" method="POST" style="display:inline"
+            input type="hidden" name="_method" value="DELETE"
+            button.btn.btn-danger type="submit" onclick="return confirm('Are you sure?')" Delete
