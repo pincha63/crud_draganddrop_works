@@ -4,38 +4,21 @@ require 'json'
 require 'slim'
 require 'sqlite3'
 require 'rack'
+require_relative "LibraryHelpers"
 
 # Connect to database
 DB = Sequel.sqlite('db/library.sqlite3')
 
 class LibraryApp < Roda
-  # Plugins
+  plugin :render, engine: 'slim', views: 'views'
   plugin :sessions, secret: 'a' * 64
   plugin :flash
-  plugin :render, engine: 'slim', views: File.expand_path("views", File.dirname(__FILE__))
-  plugin :all_verbs # Enables PUT, DELETE etc. via _method parameter in forms
-  use Rack::MethodOverride
-  plugin :flash
+  plugin :all_verbs
   plugin :static, ['/css'], root: 'public'
   plugin :path
   plugin :status_handler
 
-  # Helper to handle many-to-many relationship
-  def update_author_publishers(author_id, publisher_ids)
-    DB[:authors_publishers].where(author_id: author_id).delete
-    Array(publisher_ids).each do |pub_id|
-      DB[:authors_publishers].insert(author_id: author_id, publisher_id: pub_id)
-    end
-  end
-
-  # Helper to get current relations map
-  def get_relations_map
-    map = {}
-    DB[:authors_publishers].all.each do |row|
-      (map[row[:author_id]] ||= []) << row[:publisher_id]
-    end
-    map
-  end
+  include LibraryHelpers
 
   route do |r|
     # Root redirects to authors

@@ -26,4 +26,5 @@ else
 end
 
 require_relative 'app'
+use Rack::MethodOverride
 run LibraryApp.freeze.app

@@ -6,7 +6,7 @@ module LibraryHelpers
     end
   end
 
-  def relations_map
+  def get_relations_map
     DB[:authors_publishers].each_with_object({}) do |row, map|
       (map[row[:author_id]] ||= []) << row[:publisher_id]
     end
