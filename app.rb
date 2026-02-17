@@ -6,7 +6,7 @@ require 'sqlite3'
 require 'rack'
 
 # Connect to database
-DB = DB = Sequel.sqlite('db/library.sqlite3')
+DB = Sequel.sqlite('db/library.sqlite3')
 
 class LibraryApp < Roda
   # Plugins
