@@ -30,6 +30,8 @@ library_app/
     ├── authors/        # Author-related views (index, edit)
     ├── publishers/     # Publisher-related views (index, edit)
     └── relationships/  # Relationship management views (edit, drag_drop)
+```
+
 ## Database Schema
 The application uses a relational schema with a many-to-many relationship:
 - **authors**: `id`, `name`, `bio`
