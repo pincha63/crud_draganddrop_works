@@ -122,7 +122,7 @@ class LibraryApp < Roda
           view("authors/edit", locals: { author: author, all_publishers: DB[:publishers].all, author_publisher_ids: pub_ids })
         end
       end
-    end
+    end # authors CRUD
 
     # Publishers CRUD
     r.on "publishers" do
@@ -158,7 +158,7 @@ class LibraryApp < Roda
         r.get "edit" do
           view("publishers/edit", locals: { publisher: DB[:publishers][id: id] })
         end
-      end
-    end
-  end
-end
+      end # specific publisher
+    end # publishers CRUD
+  end # route
+end # class LibraryApp
